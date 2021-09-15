@@ -4,6 +4,7 @@
 // src/spin2.extension.ts
 
 import * as vscode from 'vscode';
+import { Formatter } from './formatter';
 
 // ----------------------------------------------------------------------------
 //  this file contains both an outline provider
@@ -28,8 +29,8 @@ export function activate(context: vscode.ExtensionContext) {
     );
 
     // register tabstop formatter
-    
-    var formatter = new formatter_1.Formatter();
+
+    var formatter = new Formatter();
 
     const indentTabStopCommand = 'spin2.indentTabStop';
 
