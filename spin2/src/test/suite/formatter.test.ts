@@ -24,7 +24,7 @@ suite('Indent Test Suite', async function () {
 
   const tests = [
     {
-      include: true,
+      include: false,
       anchorLine: 0,
       anchorCharacter: 0,
       activeLine: null,
@@ -37,7 +37,7 @@ suite('Indent Test Suite', async function () {
         tab(0) + 'CONSTANT_NAME = 0',
     },
     {
-      include: true,
+      include: false,
       anchorLine: 2,
       anchorCharacter: 0,
       activeLine: null,
@@ -50,7 +50,7 @@ suite('Indent Test Suite', async function () {
         tab(2) + '    CONSTANT_NAME = 0',
     },
     {
-      include: true,
+      include: false,
       anchorLine: 1,
       anchorCharacter: 4,
       activeLine: null,
@@ -61,7 +61,7 @@ suite('Indent Test Suite', async function () {
         'CON     CONSTANT_NAME = 0',
     },
     {
-      include: true,
+      include: false,
       anchorLine: 2,
       anchorCharacter: 2,
       activeLine: null,
@@ -74,7 +74,7 @@ suite('Indent Test Suite', async function () {
         tab(2) + 'CONSTANT_NAME = 0',
     },
     {
-      include: true,
+      include: false,
       anchorLine: 2,
       anchorCharacter: 8,
       activeLine: null,
@@ -87,7 +87,7 @@ suite('Indent Test Suite', async function () {
         tab(8) + 'CONSTANT_NAME = 0',
     },
     {
-      include: true,
+      include: false,
       anchorLine: 2,
       anchorCharacter: 16,
       activeLine: null,
@@ -100,7 +100,7 @@ suite('Indent Test Suite', async function () {
         tab(16) + 'CONSTANT_NAME = 0',
     },
     {
-      include: true,
+      include: false,
       anchorLine: 2,
       anchorCharacter: 18,
       activeLine: null,
@@ -113,7 +113,7 @@ suite('Indent Test Suite', async function () {
         tab(18) + 'CONSTANT_NAME = 0',
     },
     {
-      include: true,
+      include: false,
       anchorLine: 2,
       anchorCharacter: 32,
       activeLine: null,
@@ -126,7 +126,7 @@ suite('Indent Test Suite', async function () {
         tab(32) + 'CONSTANT_NAME = 0',
     },
     {
-      include: true,
+      include: false,
       anchorLine: 2,
       anchorCharacter: 56,
       activeLine: null,
@@ -152,7 +152,7 @@ suite('Indent Test Suite', async function () {
         tab(80) + 'CONSTANT_NAME = 0'
     },
     {
-      include: true,
+      include: false,
       anchorLine: 2,
       anchorCharacter: 104,
       activeLine: null,

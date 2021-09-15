@@ -3,14 +3,14 @@
 import * as vscode from 'vscode';
 
 /**
- * A section of P2 code that has source code setting
+ * 
  */
 export interface Block {
   tabStops: number[];
 }
 
 /**
- * A list of Block config sections
+ * 
  */
 export interface Blocks {
 
@@ -25,9 +25,6 @@ export interface Blocks {
 
 }
 
-/**
- * Code used to provide custom formatting for spin2 code
- */
 export class Formatter {
 
   readonly config = vscode.workspace.getConfiguration();
