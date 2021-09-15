@@ -31,7 +31,8 @@
     "license": "MIT",
     "main": "out/spin2.extension.js",
     "activationEvents": [
-        "onLanguage:spin2"
+        "onLanguage:spin2",
+        "onStartupFinished"
     ],
     "engines": {
         "vscode": "^1.50.0"
@@ -40,6 +41,120 @@
         "Programming Languages"
     ],
     "contributes": {
+        "configuration": [
+            {
+                "title": "Spin2 Tabstops",
+                "properties": {
+                    "spin2ElasticTabstops.enable": {
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Enable/disable Spin2 Tabstops."
+                    },
+                    "spin2ElasticTabstops.blocks": {
+                        "type": "object",
+                        "properties": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0
+                            }
+                        },
+                        "default": {
+                            "con": {
+                                "tabStops": [
+                                    2,
+                                    8,
+                                    16,
+                                    18,
+                                    32,
+                                    56,
+                                    80
+                                ]
+                            },
+                            "var": {
+                                "tabStops": [
+                                    2,
+                                    8,
+                                    22,
+                                    32,
+                                    56,
+                                    80
+                                ]
+                            },
+                            "obj": {
+                                "tabStops": [
+                                    2,
+                                    8,
+                                    16,
+                                    18,
+                                    32,
+                                    56,
+                                    80
+                                ]
+                            },
+                            "pub": {
+                                "tabStops": [
+                                    2,
+                                    4,
+                                    6,
+                                    8,
+                                    10,
+                                    32,
+                                    56,
+                                    80
+                                ]
+                            },
+                            "pri": {
+                                "tabStops": [
+                                    2,
+                                    4,
+                                    6,
+                                    8,
+                                    10,
+                                    32,
+                                    56,
+                                    80
+                                ]
+                            },
+                            "dat": {
+                                "tabStops": [
+                                    8,
+                                    14,
+                                    24,
+                                    32,
+                                    48,
+                                    56,
+                                    80
+                                ]
+                            }
+                        },
+                        "description": "List of tab stops, for section."
+                    }
+                }
+            }
+        ],
+        "commands": [
+            {
+                "command": "spin2.indentTabStop",
+                "title": "Indent tab stop"
+            },
+            {
+                "command": "spin2.outdentTabStop",
+                "title": "outdent tab stop"
+            }
+        ],
+        "keybindings": [
+            {
+                "key": "tab",
+                "command": "spin2.indentTabStop",
+                "when": "editorTextFocus && !editorReadonly && !editorTabMovesFocus"
+            },
+            {
+                "key": "shift+tab",
+                "command": "spin2.outdentTabStop",
+                "when": "editorTextFocus && !editorReadonly && !editorTabMovesFocus"
+            }
+        ],
         "themes": [
             {
                 "label": "Spin2 Ironsheep",
@@ -115,15 +230,27 @@
     "scripts": {
         "vscode:prepublish": "npm run compile && npm run compile:grammar",
         "compile": "tsc -p ./",
+        "lint": "eslint src --ext ts",
         "watch": "tsc -watch -p ./",
-        "pretest": "npm run compile",
+        "pretest": "npm run compile && npm run lint",
+        "test": "node ./out/test/runTest.js",
         "compile:grammar": "npx js-yaml syntaxes/spin2.tmLanguage.YAML-tmLanguage > syntaxes/spin2.tmLanguage.json"
     },
     "devDependencies": {
-        "@types/vscode": "^1.50.0",
         "js-yaml": "^3.14.0",
-        "typescript": "^4.0.2",
-        "vscode-test": "^1.3.0"
+        "@types/mocha": "^8.2.2",
+        "@types/node": "14.x",
+        "@types/vscode": "^1.59.0",
+        "@typescript-eslint/eslint-plugin": "^4.26.0",
+        "@typescript-eslint/parser": "^4.26.0",
+        "eslint": "^7.27.0",
+        "glob": "^7.1.7",
+        "lodash": ">=4.17.19",
+        "mocha": "^8.4.0",
+        "mocha-explorer-launcher-scripts": "^0.3.0",
+        "source-map-support": "^0.5.19",
+        "typescript": "^4.3.2",
+        "vscode-test": "^1.5.2"
     },
     "dependencies": {
         "vsce": "^1.85.0"

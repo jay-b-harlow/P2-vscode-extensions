@@ -26,10 +26,45 @@ export function activate(context: vscode.ExtensionContext) {
             { language: 'spin2' },
             new Spin2DocumentSemanticTokensProvider(), legend)
     );
+
+    // register tabstop formatter
+    
+    var formatter = new formatter_1.Formatter();
+
+    const indentTabStopCommand = 'spin2.indentTabStop';
+
+    context.subscriptions.push(vscode.commands.registerCommand(indentTabStopCommand, async () => {
+        const editor = vscode.window.activeTextEditor!;
+        const document = editor.document!;
+        var textEdits = await formatter.indentTabStop(document, editor.selection, editor.selections);
+        applyTextEdits(document, textEdits!);
+    }));
+
+    const outdentTabStopCommand = 'spin2.outdentTabStop';
+
+    context.subscriptions.push(vscode.commands.registerCommand(outdentTabStopCommand, async () => {
+        const editor = vscode.window.activeTextEditor!;
+        const document = editor.document!;
+        var textEdits = await formatter.outdentTabStop(document, editor.selection, editor.selections);
+        applyTextEdits(document, textEdits!);
+    }));
+
+    function applyTextEdits(document: vscode.TextDocument, textEdits: vscode.TextEdit[]) {
+        if (!textEdits) {
+            return;
+        }
+        const workEdits = new vscode.WorkspaceEdit();
+        workEdits.set(document.uri, textEdits); // give the edits
+        vscode.workspace.applyEdit(workEdits); // apply the edits
+    }
 }
 
+export function deactivate() {
+    console.log('Congratulations, your extension "nu1" is now deactived!');
+};
+
 // ----------------------------------------------------------------------------
-//   OUTLINE Provider
+//#region   OUTLINE Provider
 //
 class Spin2ConfigDocumentSymbolProvider implements vscode.DocumentSymbolProvider {
 
@@ -104,8 +139,10 @@ class Spin2ConfigDocumentSymbolProvider implements vscode.DocumentSymbolProvider
     }
 }
 
+//#endregion
+
 // ----------------------------------------------------------------------------
-//   Semantic Highlighting Provider
+//#region   Semantic Highlighting Provider
 //
 const tokenTypes = new Map<string, number>();
 const tokenModifiers = new Map<string, number>();
@@ -1649,7 +1686,7 @@ class Spin2DocumentSemanticTokensProvider implements vscode.DocumentSemanticToke
                                         });
                                     }
                                 }
-                        }
+                            }
                         }
                     }
                     const nameOffset = line.indexOf(localName, localVariableOffset);
@@ -1754,7 +1791,7 @@ class Spin2DocumentSemanticTokensProvider implements vscode.DocumentSemanticToke
                                             tokenModifiers: []
                                         });
                                         */
-                                   }
+                                    }
                                 }
                                 this._logSPIN('  -- variableNamePart=[' + variableNamePart + '](' + nameOffset + 1 + ')');
                                 if (this._isStorageType(variableNamePart)) {
@@ -1831,9 +1868,9 @@ class Spin2DocumentSemanticTokensProvider implements vscode.DocumentSemanticToke
                                         tokenModifiers: []
                                     });
                                     */
-                               }
+                                }
                             }
-                        let referenceDetails: IRememberedToken | undefined = undefined;
+                            let referenceDetails: IRememberedToken | undefined = undefined;
                             if (this._isLocalToken(cleanedVariableName)) {
                                 referenceDetails = this._getLocalToken(cleanedVariableName);
                                 this._logSPIN('  --  FOUND local name=[' + cleanedVariableName + ']');
@@ -2502,8 +2539,8 @@ class Spin2DocumentSemanticTokensProvider implements vscode.DocumentSemanticToke
     }
 
     private _getNonInlineCommentLine(line: string): string {
-       // NEW remove {comment} and {{comment}} single-line elements too
-       let nonInlineCommentStr: string = line;
+        // NEW remove {comment} and {{comment}} single-line elements too
+        let nonInlineCommentStr: string = line;
         // TODO: UNDONE make this into loop to find all single line {} or {{}} comments
         const startDoubleBraceOffset: number = nonInlineCommentStr.indexOf('{{');
         if (startDoubleBraceOffset != -1) {
@@ -3044,3 +3081,5 @@ class Spin2DocumentSemanticTokensProvider implements vscode.DocumentSemanticToke
         this._logMessage('---- Check DONE ----\n');
     }
 }
+
+//#endregion
