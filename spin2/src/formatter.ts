@@ -61,11 +61,15 @@ export class Formatter {
     const stops = block.tabStops ?? [this.tabSize];
     const tabStops = stops?.sort((a, b) => { return a - b; });
 
-    const index = tabStops?.findIndex((element) => element > character);
-    if (index === -1) {
-      return [0, this.tabSize!];
+    let index = tabStops?.findIndex((element) => element > character);
+    while (index === -1) {
+      const lastTabStop = tabStops[tabStops.length - 1];
+      const lastTabStop2 = tabStops[tabStops.length - 2];
+      const lenghtTabStop = lastTabStop - lastTabStop2;
+      //console.log(`push tabStops: ${blockName} [${lastTabStop + lenghtTabStop}, ${lenghtTabStop}]`)
+      tabStops.push(lastTabStop + lenghtTabStop);
+      index = tabStops?.findIndex((element) => element > character);
     }
-
     const startTabstop = tabStops[index - 1] ?? 0;
     const endTabstop = tabStops[index];
     return [startTabstop, endTabstop];
@@ -88,10 +92,15 @@ export class Formatter {
    */
   indentTabStop(document: vscode.TextDocument, selection: vscode.Selection, selections: vscode.Selection[]): vscode.ProviderResult<vscode.TextEdit[]> {
     const block = this.getBlockName(document, selection);
-    const tabStopRange = this.getTabStopRange(block, selection.active.character);
-    console.log(`indentTabStop(tabStops: [${tabStopRange[0]}, ${tabStopRange[1]}] ${selection.active.character})`);
+    const [startTabStopRange, endTabStopRange] = this.getTabStopRange(block, selection.active.character);
+    if ((startTabStopRange <= selection.active.character) && (selection.active.character <= endTabStopRange)) {
 
-    const charactersToInsert = ' '.repeat(tabStopRange[1] - selection.active.character);
+    } else {
+      throw new RangeError(`Current selection must be bounded by tab stop range [${startTabStopRange}, ${endTabStopRange}] ${selection.active.character})`);
+    }
+    //console.log(`indentTabStop(tabStops: [${startTabStopRange}, ${endTabStopRange}] ${selection.active.character})`);
+
+    const charactersToInsert = ' '.repeat(endTabStopRange - selection.active.character);
 
     //console.log(`\nanchor [${selection.anchor.line}, ${selection.anchor.character}], active: [${selection.active.line}, ${selection.active.character}], block: ${block}`);
     if (selection.isEmpty) {

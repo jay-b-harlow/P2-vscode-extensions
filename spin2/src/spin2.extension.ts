@@ -61,7 +61,6 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 export function deactivate() {
-    console.log('Congratulations, your extension "nu1" is now deactived!');
 };
 
 // ----------------------------------------------------------------------------

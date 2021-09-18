@@ -25,6 +25,7 @@ suite('Indent Test Suite', async function () {
   const tests = [
     {
       include: false,
+      title: 'tabstop #0',
       anchorLine: 0,
       anchorCharacter: 0,
       activeLine: null,
@@ -32,12 +33,13 @@ suite('Indent Test Suite', async function () {
       originalContent: '{Object_Title_and_Purpose}' + '\n' +
         'CON' + '\n' +
         tab(0) + 'CONSTANT_NAME = 0',
-      expectedContent: '    {Object_Title_and_Purpose}' + '\n' +
+      expectedContent: '  {Object_Title_and_Purpose}' + '\n' +
         'CON' + '\n' +
         tab(0) + 'CONSTANT_NAME = 0',
     },
     {
       include: false,
+      title: 'tabstop #1',
       anchorLine: 2,
       anchorCharacter: 0,
       activeLine: null,
@@ -47,21 +49,11 @@ suite('Indent Test Suite', async function () {
         tab(0) + 'CONSTANT_NAME = 0',
       expectedContent: '{Object_Title_and_Purpose}' + '\n' +
         'CON' + '\n' +
-        tab(2) + '    CONSTANT_NAME = 0',
+        tab(2) + 'CONSTANT_NAME = 0',
     },
     {
       include: false,
-      anchorLine: 1,
-      anchorCharacter: 4,
-      activeLine: null,
-      activeCharacter: null,
-      originalContent: '{Object_Title_and_Purpose}' + '\n' +
-        'CON CONSTANT_NAME = 0',
-      expectedContent: '{Object_Title_and_Purpose}' + '\n' +
-        'CON     CONSTANT_NAME = 0',
-    },
-    {
-      include: false,
+      title: 'tabstop #2',
       anchorLine: 2,
       anchorCharacter: 2,
       activeLine: null,
@@ -71,77 +63,69 @@ suite('Indent Test Suite', async function () {
         tab(2) + 'CONSTANT_NAME = 0',
       expectedContent: '{Object_Title_and_Purpose}' + '\n' +
         'CON' + '\n' +
-        tab(2) + 'CONSTANT_NAME = 0',
+        tab(8) + 'CONSTANT_NAME = 0',
     },
     {
       include: false,
+      title: 'tabstop #3',
       anchorLine: 2,
       anchorCharacter: 8,
       activeLine: null,
       activeCharacter: null,
       originalContent: '{Object_Title_and_Purpose}' + '\n' +
         'CON' + '\n' +
-        tab(2) + 'CONSTANT_NAME = 0',
+        tab(8) + 'CONSTANT_NAME = 0',
       expectedContent: '{Object_Title_and_Purpose}' + '\n' +
         'CON' + '\n' +
-        tab(8) + 'CONSTANT_NAME = 0',
+        tab(16) + 'CONSTANT_NAME = 0',
     },
     {
       include: false,
+      title: 'tabstop #4',
       anchorLine: 2,
       anchorCharacter: 16,
       activeLine: null,
       activeCharacter: null,
       originalContent: '{Object_Title_and_Purpose}' + '\n' +
         'CON' + '\n' +
-        tab(8) + 'CONSTANT_NAME = 0',
+        tab(16) + 'CONSTANT_NAME = 0',
       expectedContent: '{Object_Title_and_Purpose}' + '\n' +
         'CON' + '\n' +
-        tab(16) + 'CONSTANT_NAME = 0',
+        tab(18) + 'CONSTANT_NAME = 0',
     },
     {
       include: false,
+      title: 'tabstop #5',
       anchorLine: 2,
       anchorCharacter: 18,
       activeLine: null,
       activeCharacter: null,
       originalContent: '{Object_Title_and_Purpose}' + '\n' +
         'CON' + '\n' +
-        tab(16) + 'CONSTANT_NAME = 0',
+        tab(18) + 'CONSTANT_NAME = 0',
       expectedContent: '{Object_Title_and_Purpose}' + '\n' +
         'CON' + '\n' +
-        tab(18) + 'CONSTANT_NAME = 0',
+        tab(32) + 'CONSTANT_NAME = 0',
     },
     {
       include: false,
+      title: 'tabstop #6',
       anchorLine: 2,
       anchorCharacter: 32,
       activeLine: null,
       activeCharacter: null,
       originalContent: '{Object_Title_and_Purpose}' + '\n' +
         'CON' + '\n' +
-        tab(18) + 'CONSTANT_NAME = 0',
+        tab(32) + 'CONSTANT_NAME = 0',
       expectedContent: '{Object_Title_and_Purpose}' + '\n' +
         'CON' + '\n' +
-        tab(32) + 'CONSTANT_NAME = 0',
+        tab(56) + 'CONSTANT_NAME = 0',
     },
     {
       include: false,
+      title: 'tabstop #7',
       anchorLine: 2,
       anchorCharacter: 56,
-      activeLine: null,
-      activeCharacter: null,
-      originalContent: '{Object_Title_and_Purpose}' + '\n' +
-        'CON' + '\n' +
-        tab(32) + 'CONSTANT_NAME = 0',
-      expectedContent: '{Object_Title_and_Purpose}' + '\n' +
-        'CON' + '\n' +
-        tab(56) + 'CONSTANT_NAME = 0'
-    },
-    {
-      include: true,
-      anchorLine: 2,
-      anchorCharacter: 80,
       activeLine: null,
       activeCharacter: null,
       originalContent: '{Object_Title_and_Purpose}' + '\n' +
@@ -153,8 +137,9 @@ suite('Indent Test Suite', async function () {
     },
     {
       include: false,
+      title: 'tabstop #8',
       anchorLine: 2,
-      anchorCharacter: 104,
+      anchorCharacter: 80,
       activeLine: null,
       activeCharacter: null,
       originalContent: '{Object_Title_and_Purpose}' + '\n' +
@@ -164,10 +149,24 @@ suite('Indent Test Suite', async function () {
         'CON' + '\n' +
         tab(104) + 'CONSTANT_NAME = 0'
     },
+    {
+      include: true,
+      title: 'tabstop #9',
+      anchorLine: 2,
+      anchorCharacter: 104,
+      activeLine: null,
+      activeCharacter: null,
+      originalContent: '{Object_Title_and_Purpose}' + '\n' +
+        'CON' + '\n' +
+        tab(104) + 'CONSTANT_NAME = 0',
+      expectedContent: '{Object_Title_and_Purpose}' + '\n' +
+        'CON' + '\n' +
+        tab(128) + 'CONSTANT_NAME = 0'
+    },
   ];
 
-  await Promise.all(tests.filter(test => test.include).map(async function ({ anchorLine, anchorCharacter, activeLine, activeCharacter, originalContent, expectedContent }) {
-    test(`Indent tab stop, cursor: [${anchorLine}, ${anchorCharacter}] test`, async function () {
+  await Promise.all(tests.filter(test => test.include).map(async function ({ include, title, anchorLine, anchorCharacter, activeLine, activeCharacter, originalContent, expectedContent }) {
+    test(`Indent tab stop, cursor: ${title} [${anchorLine}, ${anchorCharacter}] test`, async function () {
       this.timeout(6000);
       //console.log(`\n${'-'.repeat(80)}\nanchor: [${anchorLine}, ${anchorCharacter}], active: [${activeLine ?? anchorLine}, ${activeCharacter ?? anchorCharacter}]\noriginalContent: ${originalContent}, \nexpectedContent: ${expectedContent}\n`);
       // arrange
@@ -188,7 +187,7 @@ suite('Indent Test Suite', async function () {
       const updatedDocument = await vscode.workspace.openTextDocument(document.uri);
       const updatedContent = updatedDocument.getText();
 
-      //console.log(`\n${'-'.repeat(80)}\nanchor: [${anchorLine}, ${anchorCharacter}], active: [${activeLine}, ${activeCharacter}]\noriginalContent: ${originalContent}, \nupdatedContent : ${updatedContent}\nexpectedContent: ${expectedContent}\n`);
+      //console.log(`\n${'-'.repeat(80)}\nanchor: [${anchorLine}, ${anchorCharacter}], active: [${activeLine}, ${activeCharacter}]\noriginalContent: '${originalContent}' \nupdatedContent: '${updatedContent}'\nexpectedContent: '${expectedContent}'\n`);
 
       // assert
       assert.strictEqual(updatedContent, expectedContent);
