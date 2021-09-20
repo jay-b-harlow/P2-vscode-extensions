@@ -28,26 +28,37 @@ export function activate(context: vscode.ExtensionContext) {
             new Spin2DocumentSemanticTokensProvider(), legend)
     );
 
-    // register tabstop formatter
+    //#region register tabstop formatter
 
     var formatter = new Formatter();
 
     const indentTabStopCommand = 'spin2.indentTabStop';
 
     context.subscriptions.push(vscode.commands.registerCommand(indentTabStopCommand, async () => {
-        const editor = vscode.window.activeTextEditor!;
-        const document = editor.document!;
-        var textEdits = await formatter.indentTabStop(document, editor.selection, editor.selections);
-        applyTextEdits(document, textEdits!);
+        try {
+            const editor = vscode?.window.activeTextEditor!;
+            const document = editor.document!;
+            var textEdits = await formatter.indentTabStop(document, editor.selections);
+            applyTextEdits(document, textEdits!);
+        } catch (error) {
+            await vscode.window.showErrorMessage("Problem");
+            console.error(error);
+        }
     }));
 
     const outdentTabStopCommand = 'spin2.outdentTabStop';
 
     context.subscriptions.push(vscode.commands.registerCommand(outdentTabStopCommand, async () => {
-        const editor = vscode.window.activeTextEditor!;
-        const document = editor.document!;
-        var textEdits = await formatter.outdentTabStop(document, editor.selection, editor.selections);
-        applyTextEdits(document, textEdits!);
+        try {
+            const editor = vscode.window.activeTextEditor!;
+            const document = editor.document!;
+            var textEdits = await formatter.outdentTabStop(document, editor.selections);
+            applyTextEdits(document, textEdits!);
+            console.log();
+        } catch (error) {
+            await vscode.window.showErrorMessage("Problem");
+            console.error(error);
+        }
     }));
 
     function applyTextEdits(document: vscode.TextDocument, textEdits: vscode.TextEdit[]) {
@@ -60,8 +71,7 @@ export function activate(context: vscode.ExtensionContext) {
     }
 }
 
-export function deactivate() {
-};
+//#endregiom
 
 // ----------------------------------------------------------------------------
 //#region   OUTLINE Provider

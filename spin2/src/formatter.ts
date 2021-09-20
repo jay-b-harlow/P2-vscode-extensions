@@ -25,6 +25,9 @@ export interface Blocks {
 
 }
 
+/**
+ * 
+ */
 export class Formatter {
 
   readonly config = vscode.workspace.getConfiguration();
@@ -52,6 +55,12 @@ export class Formatter {
   // Editor Insert Spaces "editor.insertSpaces": false,
   // Editor Detect Indentation "editor.detectIndentation": fals
 
+  /**
+   * 
+   * @param blockName 
+   * @param character 
+   * @returns 
+   */
   private getTabStopRange(blockName: string, character: number): [number, number] {
     if (!blockName) {
       blockName = 'con';
@@ -75,8 +84,14 @@ export class Formatter {
     return [startTabstop, endTabstop];
   }
 
+  /**
+   * 
+   * @param document 
+   * @param selection 
+   * @returns 
+   */
   private getBlockName(document: vscode.TextDocument, selection: vscode.Selection): string {
-    for (let lineIndex = selection.active.line; lineIndex >= 0; lineIndex--) {
+    for (let lineIndex = selection.active.line - 1; lineIndex >= 0; lineIndex--) {
       const line = document.lineAt(lineIndex);
       const match = line.text.match(this.blockIdentifier);
       if (match) {
@@ -89,39 +104,51 @@ export class Formatter {
   /**
    * indent tab stop
    * 
+   * @param document A text document.
+   * @return A list of text edit objects.
    */
-  indentTabStop(document: vscode.TextDocument, selection: vscode.Selection, selections: vscode.Selection[]): vscode.ProviderResult<vscode.TextEdit[]> {
-    const block = this.getBlockName(document, selection);
-    const [startTabStopRange, endTabStopRange] = this.getTabStopRange(block, selection.active.character);
-    if ((startTabStopRange <= selection.active.character) && (selection.active.character <= endTabStopRange)) {
+  indentTabStop(document: vscode.TextDocument, selections: vscode.Selection[]): vscode.ProviderResult<vscode.TextEdit[]> {
+    return selections.map(selection => {
+      const block = this.getBlockName(document, selection);
+      const [startTabStopRange, endTabStopRange] = this.getTabStopRange(block, selection.active.character);
 
-    } else {
-      throw new RangeError(`Current selection must be bounded by tab stop range [${startTabStopRange}, ${endTabStopRange}] ${selection.active.character})`);
-    }
-    //console.log(`indentTabStop(tabStops: [${startTabStopRange}, ${endTabStopRange}] ${selection.active.character})`);
+      const charactersToInsert = ' '.repeat(Math.abs(endTabStopRange - selection.active.character));
 
-    const charactersToInsert = ' '.repeat(endTabStopRange - selection.active.character);
+      if (selection.isEmpty) {
+        return [
+          vscode.TextEdit.insert(selection.active, charactersToInsert)
+        ];
+      } else {
+        return [
+          vscode.TextEdit.replace(selection, charactersToInsert)
+        ];
+      }
+    }).reduce((selections, selection) => selections.concat(selection), []);
 
-    //console.log(`\nanchor [${selection.anchor.line}, ${selection.anchor.character}], active: [${selection.active.line}, ${selection.active.character}], block: ${block}`);
-    if (selection.isEmpty) {
-      return [
-        vscode.TextEdit.insert(selection.active, charactersToInsert)
-      ];
-    } else {
-      return [
-        vscode.TextEdit.replace(selection, charactersToInsert)
-      ];
-    }
   };
 
   /**
    * outdent tab stop
+   *
+   * @param document A text document.
+   * @return A list of text edit objects.
    */
-  outdentTabStop(document: vscode.TextDocument, selection: vscode.Selection, selections: vscode.Selection[]): vscode.ProviderResult<vscode.TextEdit[]> {
-    //console.log(`document: ${document}, selection: ${selection}, selection: ${selections}`);
-    return [
-      vscode.TextEdit.delete(selection)
-    ];
+  outdentTabStop(document: vscode.TextDocument, selections: vscode.Selection[]): vscode.ProviderResult<vscode.TextEdit[]> {
+    return selections.map(selection => {
+      const block = this.getBlockName(document, selection);
+      const [startTabStopRange, endTabStopRange] = this.getTabStopRange(block, selection.active.character);
+
+      const charactersToInsert = ' '.repeat(Math.abs(startTabStopRange - selection.active.character));
+      if (selection.isEmpty) {
+        return [
+          vscode.TextEdit.insert(selection.active, charactersToInsert)
+        ];
+      } else {
+        return [
+          vscode.TextEdit.replace(selection, charactersToInsert)
+        ];
+      }
+    }).reduce((selections, selection) => selections.concat(selection), []);
   };
 
 };

@@ -24,7 +24,7 @@ suite('Indent Test Suite', async function () {
 
   const tests = [
     {
-      include: false,
+      include: true,
       title: 'tabstop #0',
       anchorLine: 0,
       anchorCharacter: 0,
@@ -38,7 +38,7 @@ suite('Indent Test Suite', async function () {
         tab(0) + 'CONSTANT_NAME = 0',
     },
     {
-      include: false,
+      include: true,
       title: 'tabstop #1',
       anchorLine: 2,
       anchorCharacter: 0,
@@ -52,7 +52,7 @@ suite('Indent Test Suite', async function () {
         tab(2) + 'CONSTANT_NAME = 0',
     },
     {
-      include: false,
+      include: true,
       title: 'tabstop #2',
       anchorLine: 2,
       anchorCharacter: 2,
@@ -66,7 +66,7 @@ suite('Indent Test Suite', async function () {
         tab(8) + 'CONSTANT_NAME = 0',
     },
     {
-      include: false,
+      include: true,
       title: 'tabstop #3',
       anchorLine: 2,
       anchorCharacter: 8,
@@ -80,7 +80,7 @@ suite('Indent Test Suite', async function () {
         tab(16) + 'CONSTANT_NAME = 0',
     },
     {
-      include: false,
+      include: true,
       title: 'tabstop #4',
       anchorLine: 2,
       anchorCharacter: 16,
@@ -94,7 +94,7 @@ suite('Indent Test Suite', async function () {
         tab(18) + 'CONSTANT_NAME = 0',
     },
     {
-      include: false,
+      include: true,
       title: 'tabstop #5',
       anchorLine: 2,
       anchorCharacter: 18,
@@ -108,7 +108,7 @@ suite('Indent Test Suite', async function () {
         tab(32) + 'CONSTANT_NAME = 0',
     },
     {
-      include: false,
+      include: true,
       title: 'tabstop #6',
       anchorLine: 2,
       anchorCharacter: 32,
@@ -122,7 +122,7 @@ suite('Indent Test Suite', async function () {
         tab(56) + 'CONSTANT_NAME = 0',
     },
     {
-      include: false,
+      include: true,
       title: 'tabstop #7',
       anchorLine: 2,
       anchorCharacter: 56,
@@ -136,7 +136,7 @@ suite('Indent Test Suite', async function () {
         tab(80) + 'CONSTANT_NAME = 0'
     },
     {
-      include: false,
+      include: true,
       title: 'tabstop #8',
       anchorLine: 2,
       anchorCharacter: 80,
@@ -165,17 +165,17 @@ suite('Indent Test Suite', async function () {
     },
   ];
 
-  await Promise.all(tests.filter(test => test.include).map(async function ({ include, title, anchorLine, anchorCharacter, activeLine, activeCharacter, originalContent, expectedContent }) {
+  await Promise.all(tests.filter(test => test.include).map(async function ({ title, anchorLine, anchorCharacter, activeLine, activeCharacter, originalContent, expectedContent }) {
     test(`Indent tab stop, cursor: ${title} [${anchorLine}, ${anchorCharacter}] test`, async function () {
       this.timeout(6000);
       //console.log(`\n${'-'.repeat(80)}\nanchor: [${anchorLine}, ${anchorCharacter}], active: [${activeLine ?? anchorLine}, ${activeCharacter ?? anchorCharacter}]\noriginalContent: ${originalContent}, \nexpectedContent: ${expectedContent}\n`);
       // arrange
       const document = await vscode.workspace.openTextDocument({ content: originalContent });
       const selection = new vscode.Selection(anchorLine, anchorCharacter, activeLine ?? anchorLine, activeCharacter ?? anchorCharacter);
-      const selections = new Array<vscode.Selection>();
+      const selections = [selection];
 
       // act
-      const edits = await formatter.indentTabStop(document, selection, selections);
+      const edits = await formatter.indentTabStop(document, selections);
 
       //console.log(edits);
 
@@ -204,10 +204,10 @@ suite('Indent Test Suite', async function () {
     // arrange
     const document = await vscode.workspace.openTextDocument({ content: testDocument });
     const selection = new vscode.Selection(1, 2, 3, 4);
-    const selections = new Array<vscode.Selection>();
+    const selections = [selection];
 
     // act
-    const edits = await formatter.outdentTabStop(document, selection, selections);
+    const edits = await formatter.outdentTabStop(document, selections);
 
     // assert
     assert.strictEqual(edits?.length, 1);
