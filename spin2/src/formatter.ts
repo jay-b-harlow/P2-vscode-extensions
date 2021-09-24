@@ -49,14 +49,14 @@ export class Formatter {
   }
 
   // Editor Tab Size - "editor.tabSize"
-  // Editor Completion"editor.tabCompletion": "on",
-  // Editor Use Tab Stops "editor.useTabStops": false
-  // Editor Sticky Tab Stops "editor.stickyTabStops": true
-  // Editor Insert Spaces "editor.insertSpaces": false,
+  // Editor Completion - "editor.tabCompletion": "on",
+  // Editor Use Tab Stops - "editor.useTabStops": false
+  // Editor Sticky Tab Stops - "editor.stickyTabStops": true
+  // Editor Insert Spaces - "editor.insertSpaces": false,
   // Editor Detect Indentation "editor.detectIndentation": fals
 
   /**
-   * 
+   * get the tab stop range
    * @param blockName 
    * @param character 
    * @returns 
@@ -70,14 +70,12 @@ export class Formatter {
     const stops = block.tabStops ?? [this.tabSize];
     const tabStops = stops?.sort((a, b) => { return a - b; });
 
-    let index = tabStops?.findIndex((element) => element > character);
-    while (index === -1) {
+    let index: number;
+    while ((index = tabStops?.findIndex((element) => element > character)) === -1) {
       const lastTabStop = tabStops[tabStops.length - 1];
       const lastTabStop2 = tabStops[tabStops.length - 2];
       const lenghtTabStop = lastTabStop - lastTabStop2;
-      //console.log(`push tabStops: ${blockName} [${lastTabStop + lenghtTabStop}, ${lenghtTabStop}]`)
       tabStops.push(lastTabStop + lenghtTabStop);
-      index = tabStops?.findIndex((element) => element > character);
     }
     const startTabstop = tabStops[index - 1] ?? 0;
     const endTabstop = tabStops[index];
@@ -85,6 +83,7 @@ export class Formatter {
   }
 
   /**
+   * get the name of the current block/section
    * 
    * @param document 
    * @param selection 
@@ -138,16 +137,13 @@ export class Formatter {
       const block = this.getBlockName(document, selection);
       const [startTabStopRange, endTabStopRange] = this.getTabStopRange(block, selection.active.character);
 
-      const charactersToInsert = ' '.repeat(Math.abs(startTabStopRange - selection.active.character));
-      if (selection.isEmpty) {
-        return [
-          vscode.TextEdit.insert(selection.active, charactersToInsert)
-        ];
-      } else {
-        return [
-          vscode.TextEdit.replace(selection, charactersToInsert)
-        ];
-      }
+      const start = selection.start.with({ character: startTabStopRange });
+
+      const range = selection.with({ start: start })
+      console.log(`delete([${range.start.line}-${range.start.character}] [${range.end.line}-${range.end.character}] tabStopRange from: ${startTabStopRange} to: ${endTabStopRange}])`);
+      return [
+        vscode.TextEdit.delete(range)
+      ];
     }).reduce((selections, selection) => selections.concat(selection), []);
   };
 
