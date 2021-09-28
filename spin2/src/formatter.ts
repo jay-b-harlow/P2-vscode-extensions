@@ -56,12 +56,12 @@ export class Formatter {
   // Editor Detect Indentation "editor.detectIndentation": fals
 
   /**
-   * get the tab stop range
+   * get the pervious tab stop 
    * @param blockName 
    * @param character 
    * @returns 
    */
-  private getTabStopRange(blockName: string, character: number): [number, number] {
+  getPreviousTabStop(blockName: string, character: number): number {
     if (!blockName) {
       blockName = 'con';
     }
@@ -77,9 +77,57 @@ export class Formatter {
       const lenghtTabStop = lastTabStop - lastTabStop2;
       tabStops.push(lastTabStop + lenghtTabStop);
     }
-    const startTabstop = tabStops[index - 1] ?? 0;
-    const endTabstop = tabStops[index];
-    return [startTabstop, endTabstop];
+    return tabStops[index - 2] ?? 0;
+  }
+
+  /**
+    * get the pervious tab stop 
+    * @param blockName 
+    * @param character 
+    * @returns 
+    */
+  getCurrentTabStop(blockName: string, character: number): number {
+    if (!blockName) {
+      blockName = 'con';
+    }
+    const block = this.blocks[blockName.toLowerCase()];
+
+    const stops = block.tabStops ?? [this.tabSize];
+    const tabStops = stops?.sort((a, b) => { return a - b; });
+
+    let index: number;
+    while ((index = tabStops?.findIndex((element) => element > character)) === -1) {
+      const lastTabStop = tabStops[tabStops.length - 1];
+      const lastTabStop2 = tabStops[tabStops.length - 2];
+      const lenghtTabStop = lastTabStop - lastTabStop2;
+      tabStops.push(lastTabStop + lenghtTabStop);
+    }
+    return tabStops[index - 1] ?? 0;
+  }
+
+  /**
+ * get the next tab stop 
+ * @param blockName 
+ * @param character 
+ * @returns 
+ */
+  getNextTabStop(blockName: string, character: number): number {
+    if (!blockName) {
+      blockName = 'con';
+    }
+    const block = this.blocks[blockName.toLowerCase()];
+
+    const stops = block.tabStops ?? [this.tabSize];
+    const tabStops = stops?.sort((a, b) => { return a - b; });
+
+    let index: number;
+    while ((index = tabStops?.findIndex((element) => element > character)) === -1) {
+      const lastTabStop = tabStops[tabStops.length - 1];
+      const lastTabStop2 = tabStops[tabStops.length - 2];
+      const lenghtTabStop = lastTabStop - lastTabStop2;
+      tabStops.push(lastTabStop + lenghtTabStop);
+    }
+    return tabStops[index];
   }
 
   /**
@@ -89,7 +137,7 @@ export class Formatter {
    * @param selection 
    * @returns 
    */
-  private getBlockName(document: vscode.TextDocument, selection: vscode.Selection): string {
+  getBlockName(document: vscode.TextDocument, selection: vscode.Selection): string {
     for (let lineIndex = selection.active.line - 1; lineIndex >= 0; lineIndex--) {
       const line = document.lineAt(lineIndex);
       const match = line.text.match(this.blockIdentifier);
@@ -109,9 +157,9 @@ export class Formatter {
   indentTabStop(document: vscode.TextDocument, selections: vscode.Selection[]): vscode.ProviderResult<vscode.TextEdit[]> {
     return selections.map(selection => {
       const block = this.getBlockName(document, selection);
-      const [startTabStopRange, endTabStopRange] = this.getTabStopRange(block, selection.active.character);
+      const nextTabstop = this.getNextTabStop(block, selection.active.character);
 
-      const charactersToInsert = ' '.repeat(Math.abs(endTabStopRange - selection.active.character));
+      const charactersToInsert = ' '.repeat(Math.abs(nextTabstop - selection.active.character));
 
       if (selection.isEmpty) {
         return [
@@ -135,12 +183,12 @@ export class Formatter {
   outdentTabStop(document: vscode.TextDocument, selections: vscode.Selection[]): vscode.ProviderResult<vscode.TextEdit[]> {
     return selections.map(selection => {
       const block = this.getBlockName(document, selection);
-      const [startTabStopRange, endTabStopRange] = this.getTabStopRange(block, selection.active.character);
+      const startTabStopRange = this.getPreviousTabStop(block, selection.active.character);
 
       const start = selection.start.with({ character: startTabStopRange });
 
       const range = selection.with({ start: start })
-      console.log(`delete([${range.start.line}-${range.start.character}] [${range.end.line}-${range.end.character}] tabStopRange from: ${startTabStopRange} to: ${endTabStopRange}])`);
+      //console.log(`delete([${range.start.line}-${range.start.character}] [${range.end.line}-${range.end.character}] tabStopRange from: ${startTabStopRange} to: ${endTabStopRange}])`);
       return [
         vscode.TextEdit.delete(range)
       ];
