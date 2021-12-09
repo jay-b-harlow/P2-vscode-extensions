@@ -17,6 +17,15 @@ Possible next additions:
 - Add new-file templates as Snippets
 - Add additional Snippets as the community identifies them
 
+## [1.3.0] 2021-12-xx
+
+Major Update - add manual formatting according to traditional spin2 custom tab-stops
+
+New Formatting Support:
+
+- Supports configurable tabstops per section as does Propeller Tool.
+- Adds support for single line indent/outdent
+
 ## [1.1.0] 2021-05-19
 
 Minor update to fix incorrect highlighting

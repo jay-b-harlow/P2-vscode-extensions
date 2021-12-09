@@ -24,7 +24,16 @@ The code outline for .spin2 files works as follows:
   - If section name is following by {comment} then name and comment will be shown in outline
   - For PUB and PRI the method name, parameters and return values are shown
 
-_Hint:_ Configure the OUTLINE panel to "Sort by Position" to reflect the order in your source code.
+_Hint:_ Configure the OUTLINE panel to "Sort by Position" to reflect the order in your source file.
+
+## Feature: Code Formatting
+
+This version of the spin2 extension now supports code formatting for spin2 and pasm2.
+
+Key features are:
+
+- Supports configurable tabstops per section as does Propeller Tool.
+- Adds support for single line indent/outdent
 
 ## Known Issues
 
