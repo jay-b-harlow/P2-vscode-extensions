@@ -23,7 +23,8 @@ The **P2 Forum Thread** containing discussion of [this VSCode support](https://f
 - **Semantic Highlighting** for both Spin2 and Pasm2 now fully working
 - File navigation from **Outline View**
 - **Manual Code Formatting** supports alignment to spin2-custom tab stops
-- **Manual Code Formatting** supports project-specific spin2-custom tab stops- Works with your favorite VSCode themes
+- **Manual Code Formatting** supports project-specific spin2-custom tab stops
+- Works with your favorite VSCode themes
 - Offers companion Theme (Two themes: Syntax+Semantic, and Syntax only - mostly used during semantic highlighting development)
 
 ### Up next
