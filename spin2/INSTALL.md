@@ -16,18 +16,31 @@ code --install-extension spin2-?.?.?.vsix
 
 ## Build the extension
 
+**NOTE**: building this extension requires the use of [Docker](https://www.docker.com/) and more specifically the latest [node devepment image for docker](https://hub.docker.com/_/node)
+
 1. Clone the repository and enter into the folder
 
     ```bash
     git clone git@github.com:ironsheep/P2-vscode-support.git
     cd spin-p2-support/spin2
     ```
-
-2. Install the required packages with `npm`
+    
+2. Install the docker image if you don't already have it
 
     ```bash
-    npm install
+    docker pull node
+    ```    
+    
+3. Open VSCode to the ./spin2 directory within the repo clone just installed
+
+4. Install the required packages with `npm`
+
+    ```bash
+    npm install           #  should happen when you ask VSCode to [reopen in container]
+    npm install -g vsce   # if this is not yet installed
     ```
+    
+    **NOTE**: if the `npm install` advises that a newer `npm` is available then also install the new as it advises.
 
 3. Compile with `npm`
 
@@ -52,8 +65,11 @@ To complete the manual installation, follow the remaining steps to manually crea
     ```bash
     vsce package
     ```
+    
+    **NOTE**: the package version number is specified in package.json. Modify the version number before packaging!
 
-    This should generate a `swmf-grammar-?.?.?.vsix` file in the current directory.
+    This should generate a `spin2-?.?.?.vsix` file in the current directory.
+    
 5. Manually install the extension in VS Code (you may want to replace the wildcards in the version number)
 
     ```bash
