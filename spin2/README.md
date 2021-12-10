@@ -8,12 +8,12 @@ This extension provides support for Spin2 and Pasm2, the primary languages for p
 
 ## Feature: Syntax Highlighting
 
-Both Spin2 and Pasm2 are now completely supported - including streamer and smartpins constants
+Both Spin2 and Pasm2 are now completely supported - including streamer and smartpin constants
 
 ## Feature: Semantic Highlighting
 
 Spin2 and Pasm2 are now supported and will be improving over the next couple of releases.
-See the **ChangeLog** for detailed status.
+See the [**ChangeLog**](CHANGELOG.md) for detailed status.
 
 ## Feature: Code Outline
 
@@ -28,12 +28,14 @@ _Hint:_ Configure the OUTLINE panel to "Sort by Position" to reflect the order i
 
 ## Feature: Code Formatting
 
-This version of the spin2 extension now supports code formatting for spin2 and pasm2.
+This version of the spin2 extension now supports **manual code formatting** for spin2 and pasm2.
 
 Key features are:
 
-- Supports configurable tabstops per section as does Propeller Tool.
+- Configurable tabstops per section like Propeller Tool.
 - Adds support for single line indent/outdent
+    - Pressing `Tab` moves the cursor to the next spin2 tab stop
+    - Pressing `Shift+Tab` moves the cursor to the previous spin2 tab stop
 
 ## Known Issues
 
