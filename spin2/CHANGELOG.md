@@ -17,6 +17,23 @@ Possible next additions:
 - Add new-file templates as Snippets
 - Add additional Snippets as the community identifies them
 
+## [1.3.0] 2022-02-xx
+
+Major Update - add manual formatting according to traditional spin2 custom tab-stops
+
+New Formatting Support:
+
+- Supports configurable tabstops per section as does Propeller Tool.
+- Adds support for single line indent/outdent
+
+### - Known Issues w/v1.3.0
+
+- debug() statements that don't use double-quoted strings currently are not parsed correctly
+- Syntax highlight of DAT section sometimes fails... (although it is less often now...)
+- Semantic highlight: the 'modification' attribute is being over-applied, should use more than := as test!!!!
+- Occasional issues with highlighting of enum leading constant (#nnn should be recognized as number)
+- _I'm sure there are more issues..._
+
 ## [1.1.0] 2021-05-19
 
 Minor update to fix incorrect highlighting

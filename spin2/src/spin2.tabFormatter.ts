@@ -2,15 +2,18 @@
 
 import * as vscode from 'vscode';
 
+// ----------------------------------------------------------------------------
+//  this file contains routines for tabbing the code: ==> or <==
+
 /**
- * 
+ *
  */
 export interface Block {
   tabStops: number[];
 }
 
 /**
- * 
+ *
  */
 export interface Blocks {
 
@@ -26,7 +29,7 @@ export interface Blocks {
 }
 
 /**
- * 
+ *
  */
 export class Formatter {
 
@@ -53,13 +56,13 @@ export class Formatter {
   // Editor Use Tab Stops - "editor.useTabStops": false
   // Editor Sticky Tab Stops - "editor.stickyTabStops": true
   // Editor Insert Spaces - "editor.insertSpaces": false,
-  // Editor Detect Indentation "editor.detectIndentation": fals
+  // Editor Detect Indentation "editor.detectIndentation": false
 
   /**
-   * get the pervious tab stop 
-   * @param blockName 
-   * @param character 
-   * @returns 
+   * get the previous tab stop
+   * @param blockName
+   * @param character
+   * @returns
    */
   getPreviousTabStop(blockName: string, character: number): number {
     if (!blockName) {
@@ -74,17 +77,17 @@ export class Formatter {
     while ((index = tabStops?.findIndex((element) => element > character)) === -1) {
       const lastTabStop = tabStops[tabStops.length - 1];
       const lastTabStop2 = tabStops[tabStops.length - 2];
-      const lenghtTabStop = lastTabStop - lastTabStop2;
-      tabStops.push(lastTabStop + lenghtTabStop);
+      const lengthTabStop = lastTabStop - lastTabStop2;
+      tabStops.push(lastTabStop + lengthTabStop);
     }
     return tabStops[index - 2] ?? 0;
   }
 
   /**
-    * get the pervious tab stop 
-    * @param blockName 
-    * @param character 
-    * @returns 
+    * get the current tab stop
+    * @param blockName
+    * @param character
+    * @returns
     */
   getCurrentTabStop(blockName: string, character: number): number {
     if (!blockName) {
@@ -99,17 +102,17 @@ export class Formatter {
     while ((index = tabStops?.findIndex((element) => element > character)) === -1) {
       const lastTabStop = tabStops[tabStops.length - 1];
       const lastTabStop2 = tabStops[tabStops.length - 2];
-      const lenghtTabStop = lastTabStop - lastTabStop2;
-      tabStops.push(lastTabStop + lenghtTabStop);
+      const lengthTabStop = lastTabStop - lastTabStop2;
+      tabStops.push(lastTabStop + lengthTabStop);
     }
     return tabStops[index - 1] ?? 0;
   }
 
   /**
- * get the next tab stop 
- * @param blockName 
- * @param character 
- * @returns 
+ * get the next tab stop
+ * @param blockName
+ * @param character
+ * @returns
  */
   getNextTabStop(blockName: string, character: number): number {
     if (!blockName) {
@@ -124,18 +127,18 @@ export class Formatter {
     while ((index = tabStops?.findIndex((element) => element > character)) === -1) {
       const lastTabStop = tabStops[tabStops.length - 1];
       const lastTabStop2 = tabStops[tabStops.length - 2];
-      const lenghtTabStop = lastTabStop - lastTabStop2;
-      tabStops.push(lastTabStop + lenghtTabStop);
+      const lengthTabStop = lastTabStop - lastTabStop2;
+      tabStops.push(lastTabStop + lengthTabStop);
     }
     return tabStops[index];
   }
 
   /**
    * get the name of the current block/section
-   * 
-   * @param document 
-   * @param selection 
-   * @returns 
+   *
+   * @param document
+   * @param selection
+   * @returns
    */
   getBlockName(document: vscode.TextDocument, selection: vscode.Selection): string {
     for (let lineIndex = selection.active.line - 1; lineIndex >= 0; lineIndex--) {
@@ -150,11 +153,11 @@ export class Formatter {
 
   /**
    * indent tab stop
-   * 
+   *
    * @param document A text document.
    * @return A list of text edit objects.
    */
-  indentTabStop(document: vscode.TextDocument, selections: vscode.Selection[]): vscode.ProviderResult<vscode.TextEdit[]> {
+  indentTabStop(document: vscode.TextDocument, selections: readonly vscode.Selection[]): vscode.ProviderResult<vscode.TextEdit[]> {
     return selections.map(selection => {
       const block = this.getBlockName(document, selection);
       const nextTabstop = this.getNextTabStop(block, selection.active.character);
@@ -180,7 +183,7 @@ export class Formatter {
    * @param document A text document.
    * @return A list of text edit objects.
    */
-  outdentTabStop(document: vscode.TextDocument, selections: vscode.Selection[]): vscode.ProviderResult<vscode.TextEdit[]> {
+  outdentTabStop(document: vscode.TextDocument, selections: readonly vscode.Selection[]): vscode.ProviderResult<vscode.TextEdit[]> {
     return selections.map(selection => {
       const block = this.getBlockName(document, selection);
       const startTabStopRange = this.getPreviousTabStop(block, selection.active.character);

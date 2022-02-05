@@ -4,12 +4,12 @@
 // src/spin2.extension.ts
 
 import * as vscode from 'vscode';
-import { Formatter } from './formatter';
+import { Formatter } from './spin2.tabFormatter';
 
 // ----------------------------------------------------------------------------
-//  this file contains both an outline provider
+//  this file contains our outline provider
 //    and our semantic highlighting provider
-//
+//    and hooks for our tab formatting
 
 // register services provided by this file
 export function activate(context: vscode.ExtensionContext) {
